@@ -23,4 +23,38 @@ public class Course {
     public Course(){
         super();
     }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", nameOfTeacher='" + nameOfTeacher + '\'' +
+                ", duration=" + duration +
+                '}';
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setNameOfTeacher(String nameOfTeacher) {
+        this.nameOfTeacher = nameOfTeacher;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getNameOfTeacher() {
+        return nameOfTeacher;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
 }
