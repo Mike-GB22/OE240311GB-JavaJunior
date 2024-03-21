@@ -39,6 +39,10 @@ public class Db {
 
         //Удаление одного элемента
         deleteCourseById(connector, 5);
+
+        //Удаление элементов с писке
+        deleteCoursesFromList(connector,getCourses(connector));
+
     }
     public static List<Course> generateListOfCourses(){
         List<Course> courses = new ArrayList<>();
@@ -114,4 +118,17 @@ public class Db {
         }
     }
 
+    public static void deleteCoursesFromList(Connector connector, List<Course> courses){
+        try(Session session = connector.getSesion()){
+            session.beginTransaction();
+            for (Course course : courses){
+                session.delete(course);
+            }
+            session.getTransaction().commit();
+
+        } catch (Exception e){
+            System.out.println("--- deleteCourseById ---");
+            e.printStackTrace();
+        }
+    }
 }
