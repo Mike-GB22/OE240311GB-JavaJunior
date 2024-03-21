@@ -21,6 +21,12 @@ public class Db {
 
         Course course1 = new Course("Java", "Ivanov", 1000);
 
+        session.beginTransaction();
+        session.save(course1);
+        session.getTransaction().commit();
+        session.close();
+
+
 
     }
 }
