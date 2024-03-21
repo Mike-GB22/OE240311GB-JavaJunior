@@ -6,11 +6,21 @@ import jakarta.persistence.*;
 public class Course {
     @Id
     @GeneratedValue(strategy = CenerationType.IDENTITY)
-    private int idCourse;
+    private int id;
     @Column(name = "название")
-    private String name;
+    private String title;
     @Column(name = "преподаватель")
     private String nameOfTeacher;
     @Column(name = "колличество часов")
-    private int countHours;
+    private int duration;
+
+    public Course(String title, String nameOfTeacher, int duration){
+        this.title = title;
+        this.nameOfTeacher = nameOfTeacher;
+        this.duration = duration;
+    }
+
+    public Course(){
+        super();
+    }
 }
