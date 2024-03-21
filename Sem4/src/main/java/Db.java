@@ -34,11 +34,11 @@ public class Db {
         System.out.println(getCourseById(connector, 1));
 
         //Модификация
-        updateCourses(connector, 1, new Course("Java", "Ivanov", 1000));
+        updateCoursById(connector, 1, new Course("Java", "Ivanov", 1000));
         System.out.println(getCourseById(connector, 1));
 
-        //Удаление
-
+        //Удаление одного элемента
+        deleteCourseById(connector, 5);
     }
     public static List<Course> generateListOfCourses(){
         List<Course> courses = new ArrayList<>();
@@ -46,6 +46,7 @@ public class Db {
         courses.add(new Course("MySQL", "Petrov", 100));
         courses.add(new Course("Hibernate", "Sidorov", 100));
         courses.add(new Course("Docker", "Pushkin", 100));
+        courses.add(new Course("Dvornik", "Pushkin", 1000));
         return courses;
     }
 
@@ -70,7 +71,7 @@ public class Db {
         return courses;
     }
 
-    public static void updateCourses(Connector connector, int id, Course courseNew){
+    public static void updateCoursById(Connector connector, int id, Course courseNew){
         Course courseOld = getCourseById(connector, id);
         try(Session session = connector.getSesion()){
             courseOld.setTitle(courseNew.getTitle());
@@ -99,6 +100,18 @@ public class Db {
             e.printStackTrace();
         }
         return null;
+    }
+    public static void deleteCourseById(Connector connector, int id){
+        Course courseOld = getCourseById(connector, id);
+        try(Session session = connector.getSesion()){
+            session.beginTransaction();
+            session.delete(courseOld);
+            session.getTransaction().commit();
+
+        } catch (Exception e){
+            System.out.println("--- deleteCourseById ---");
+            e.printStackTrace();
+        }
     }
 
 }
