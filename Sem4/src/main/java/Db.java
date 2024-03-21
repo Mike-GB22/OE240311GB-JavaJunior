@@ -35,6 +35,7 @@ public class Db {
 
         //Модификация
         updateCourses(connector, 1, new Course("Java", "Ivanov", 1000));
+        System.out.println(getCourseById(connector, 1));
 
         //Удаление
 
@@ -75,6 +76,10 @@ public class Db {
             courseOld.setTitle(courseNew.getTitle());
             courseOld.setNameOfTeacher(courseOld.getNameOfTeacher());
             courseOld.setDuration(courseNew.getDuration());
+
+            session.beginTransaction();
+            session.update(courseOld);
+            session.getTransaction().commit();
 
         } catch (Exception e){
             System.out.println("--- updateCourses ---");
