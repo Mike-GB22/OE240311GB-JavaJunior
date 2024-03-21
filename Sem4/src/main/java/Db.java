@@ -1,10 +1,4 @@
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.service.Service;
-import org.hibernate.service.ServiceRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +23,13 @@ public class Db {
 //        session.getTransaction().commit();
 //        session.close();
         Connector connector = new Connector();
-        Session session = connector.getSesion();
-        insertCoureses(session);
-        session.close();
+        insertCourses(connector);
+        getCourses(connector).stream().forEach(System.out::println);
+
     }
 
-    public static void insertCoureses(Session session){
+    public static void insertCourses(Connector connector){
+        Session session = connector.getSesion();
         List<Course> courses = new ArrayList<>();
         courses.add(new Course("Java", "Ivanov", 1000));
         courses.add(new Course("MySQL", "Petrov", 100));
@@ -46,5 +41,17 @@ public class Db {
             session.save(course);
         }
         session.beginTransaction().commit();
+        session.close();
+    }
+
+    public static List<Course> getCourses(Connector connector){
+        List<Course> courses;
+        try(Session session = connector.getSesion()){
+            courses = session.createQuery("FROM course", Course.class).getResultList();
+        } catch (Exception e){
+            System.out.println("--- getCourses ---");
+            e.printStackTrace();
+        }
+        return courses;
     }
 }
