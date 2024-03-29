@@ -1,4 +1,4 @@
-//2024.03.29
+//2024.03.29 mip24
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
@@ -8,6 +8,7 @@ public class Client {
     private String name;
     private BufferedWriter bufferedWriter;
     private BufferedReader bufferedReader;
+    boolean isClientRun = false;
 
     public Client(String address, int port){
         try {
@@ -17,12 +18,15 @@ public class Client {
             bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
             Scanner scanner = new Scanner(System.in);
             System.out.print("Input your name: ");
+            isClientRun = true;
             sendMessage(name = scanner.nextLine());
             listenForMessagesFromServer();
+            listenForMessagesFromClient();
 
         } catch (IOException e) {
+            e.printStackTrace();
         } finally {
-            closeEverything();
+            closeEverything("exit");
         }
     }
 
@@ -37,12 +41,13 @@ public class Client {
             @Override
             public void run() {
                 String messageFromServer;
-                while(socket.isConnected()){
+                System.out.println("Staring listener messages from Server...");
+                while(socket.isConnected() && isClientRun){
                     try {
                         messageFromServer = bufferedReader.readLine();
                         System.out.println(messageFromServer);
                     } catch (IOException e) {
-                        closeEverything();
+                        closeEverything("messageFromServer");
                     }
                 }
             }
@@ -52,21 +57,26 @@ public class Client {
     public void listenForMessagesFromClient() throws IOException{
         Scanner scanner = new Scanner(System.in);
         String messagesToServer;
-        while (socket.isConnected()){
+        while (socket.isConnected() && isClientRun){
             messagesToServer = scanner.nextLine();
             if(messagesToServer == null
                 || messagesToServer == ""
                 || messagesToServer == "\n"
                 || messagesToServer == "\r"
-                || messagesToServer == "\n\r") closeEverything();
+                || messagesToServer == "\n\r") closeEverything("User selected EXIT.");
 
             sendMessage(messagesToServer);
         }
     }
 
+    public void closeEverything(String text){
+        System.out.print(text + " - ");
+        closeEverything();
+    }
 
     public void closeEverything(){
         System.out.println("Close everything...");
+        isClientRun = false;
         try {
             if (bufferedReader != null) bufferedReader.close();
             if (bufferedWriter != null) bufferedWriter.close();
