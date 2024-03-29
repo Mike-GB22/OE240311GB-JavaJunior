@@ -60,7 +60,6 @@ public class ClientManager implements Runnable{
             listenMessagesFromClient();
 
         } catch (IOException e){
-            e.printStackTrace();
         } finally {
             closeEverything();
         }
